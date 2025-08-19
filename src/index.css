@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-
+/* 
 body {
   background: black;
   color: #00ff99;
@@ -10,12 +10,12 @@ body {
   overflow-x: hidden;
 }
 
-/* Glow effect */
+
 .drop-shadow-glow {
   text-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99, 0 0 40px #00ff99;
 }
 
-/* Fondo partículas simple */
+
 body::before {
   content: "";
   position: fixed;
@@ -27,4 +27,4 @@ body::before {
   background-size: 40px 40px;
   opacity: 0.1;
   z-index: 0;
-}
+} */

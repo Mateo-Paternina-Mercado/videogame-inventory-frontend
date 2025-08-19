@@ -20,7 +20,9 @@ const CatalogoJuegos = () => {
 
     const juego = juegos.find((j) => j.id === id);
     if (juego.stock > 0) {
-      agregarAlCarrito(juego); // 👈 añade al carrito
+      console.log("aquiva la funcion carrito");
+      
+     agregarAlCarrito(juego); // 👈 añade al carrito//eñl error esa en esta  funcion solucionelo yo del mañana 
       toast.success(`🎮 ${juego.titulo} agregado al carrito`);
     } else {
       toast.error(`❌ ${juego.titulo} no tiene stock disponible`);
@@ -28,7 +30,7 @@ const CatalogoJuegos = () => {
   };
 
   return (
-    <div className="grid grid-cols-4 gap-6 p-6">
+    <div className="grid grid-cols-4 gap-6 p-6 ">
       {juegos.map((juego) => (
         <div key={juego.id} className="bg-gray-900 rounded-xl p-4 shadow-lg hover:scale-105 transition">
           <img src={juego.imagen} alt={juego.titulo} className="rounded-lg w-full h-60 object-cover" />
