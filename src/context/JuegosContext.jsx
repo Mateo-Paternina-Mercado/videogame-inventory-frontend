@@ -1,16 +1,25 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import juegosData from "../data/juegosData";
+import { getProducts } from "../services/api"; // en lugar de juegosData
 
-const JuegosContext = createContext();
+export const JuegosContext = createContext();
 
 export const JuegosProvider = ({ children }) => {
-  const [juegos, setJuegos] = useState(() => {
-    return JSON.parse(localStorage.getItem("juegos")) || juegosData;
-  });
+  const [juegos, setJuegos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem("juegos", JSON.stringify(juegos));
-  }, [juegos]);
+    async function fetchData() {
+      try {
+        const data = await getProducts();
+        setJuegos(data);
+      } catch (err) {
+        console.error("Error cargando productos:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
 
   // Reducir stock al comprar
   const reducirStock = (id) => {
@@ -33,7 +42,7 @@ export const JuegosProvider = ({ children }) => {
   };
 
   return (
-    <JuegosContext.Provider value={{ juegos, reducirStock, recuperarStock }}>
+    <JuegosContext.Provider value={{ juegos, setJuegos, reducirStock, recuperarStock }}>
       {children}
     </JuegosContext.Provider>
   );
