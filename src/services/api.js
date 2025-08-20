@@ -45,3 +45,13 @@ export async function deleteProduct(id) {
   if (!res.ok) throw new Error("Error al eliminar producto");
   return res.json();
 }
+
+export async function actualizarStock(id, nuevaCantidad) {
+  const res = await fetch(`${API_URL}/api/products/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ cantidad: nuevaCantidad }),
+  });
+  if (!res.ok) throw new Error("Error al actualizar stock");
+  return res.json();
+}

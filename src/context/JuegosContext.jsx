@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getProducts } from "../services/api"; // en lugar de juegosData
+import { actualizarStock } from "../services/api.js";
 
 export const JuegosContext = createContext();
 
@@ -21,24 +22,34 @@ export const JuegosProvider = ({ children }) => {
     fetchData();
   }, []);
 
-  // Reducir stock al comprar
-  const reducirStock = (id) => {
+  const reducirStock = async (id) => {
     setJuegos((prev) =>
       prev.map((juego) =>
-        juego.id === id && juego.stock > 0
-          ? { ...juego, stock: juego.stock - 1 }
+        juego._id === id && juego.cantidad > 0
+          ? { ...juego, cantidad: juego.cantidad - 1 }
           : juego
       )
     );
+  
+    // Llamada al backend para persistir el cambio
+    const juego = juegos.find((j) => j._id === id);
+    if (juego && juego.cantidad > 0) {
+      await actualizarStock(id, juego.cantidad - 1);
+    }
   };
-
-  // Recuperar stock al eliminar del carrito
-  const recuperarStock = (id) => {
+  
+  const recuperarStock = async (id) => {
     setJuegos((prev) =>
       prev.map((juego) =>
-        juego.id === id ? { ...juego, stock: juego.stock + 1 } : juego
+        juego._id === id ? { ...juego, cantidad: juego.cantidad + 1 } : juego
       )
     );
+  
+    // Llamada al backend para persistir el cambio
+    const juego = juegos.find((j) => j._id === id);
+    if (juego) {
+      await actualizarStock(id, juego.cantidad + 1);
+    }
   };
 
   return (
