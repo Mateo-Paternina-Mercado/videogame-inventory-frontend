@@ -6,8 +6,8 @@ const GameCard = ({ juego, addFavorito }) => {
 
   return (
     <div className="bg-gray-800 p-4 rounded-xl shadow-lg flex flex-col">
-      <img src={juego.imagen} alt={juego.nombre} className="rounded-lg mb-3" />
-      <h3 className="font-bold text-lg">{juego.nombre}</h3>
+      <img src={juego.imagen} alt={juego.titulo} className="rounded-lg mb-3" />
+      <h3 className="font-bold text-lg">{juego.titulo}</h3>
       <p className="text-green-400 font-semibold">${juego.precio}</p>
       <p className="text-sm text-gray-400">Stock: {juego.stock}</p>
 

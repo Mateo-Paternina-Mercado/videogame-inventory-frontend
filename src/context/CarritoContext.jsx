@@ -1,38 +1,49 @@
-// src/context/CarritoContext.jsx
-import { createContext, useState } from "react";
-import { useCarrito } from "./useCarrito";
+import { createContext, useContext, useState } from "react";
 
-// 1. Crear contexto
 const CarritoContext = createContext();
 
-// 2. Hook personalizado
- export const useCarrito = () => {
-   const context = useContext(CarritoContext);
-   if (!context) {
-     throw new Error("useCarrito debe usarse dentro de un CarritoProvider");
-   }
-   return context;
- };
-
-
-
-// 3. Provider
 export const CarritoProvider = ({ children }) => {
   const [carrito, setCarrito] = useState([]);
 
-  const addToCarrito = (juego) => {
-    setCarrito((prev) => [...prev, juego]);
+  // 👉 Agregar juego con control de cantidad
+  const agregarAlCarrito = (juego) => {
+    setCarrito((prev) => {
+      const existente = prev.find((j) => j.id === juego.id);
+      if (existente) {
+        return prev.map((j) =>
+          j.id === juego.id ? { ...j, cantidad: j.cantidad + 1 } : j
+        );
+      }
+      return [...prev, { ...juego, cantidad: 1 }];
+    });
   };
 
-  const removeFromCarrito = (id) => {
-    setCarrito((prev) => prev.filter((juego) => juego.id !== id));
+  // 👉 Eliminar UNA unidad del carrito
+  const eliminarDelCarrito = (id) => {
+    setCarrito((prev) => {
+      const existente = prev.find((j) => j.id === id);
+      if (!existente) return prev;
+      if (existente.cantidad > 1) {
+        return prev.map((j) =>
+          j.id === id ? { ...j, cantidad: j.cantidad - 1 } : j
+        );
+      }
+      return prev.filter((j) => j.id !== id);
+    });
   };
 
-  const clearCarrito = () => setCarrito([]);
+  // 👉 Eliminar TODO un juego del carrito
+  const eliminarTodoDelCarrito = (id) => {
+    setCarrito((prev) => prev.filter((j) => j.id !== id));
+  };
 
   return (
-    <CarritoContext.Provider value={{ carrito, addToCarrito, removeFromCarrito, clearCarrito }}>
+    <CarritoContext.Provider
+      value={{ carrito, agregarAlCarrito, eliminarDelCarrito, eliminarTodoDelCarrito }}
+    >
       {children}
     </CarritoContext.Provider>
   );
 };
+
+export const useCarrito = () => useContext(CarritoContext);
